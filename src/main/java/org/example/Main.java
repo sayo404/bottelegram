@@ -7,9 +7,13 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.generics.TelegramClient;
 
+//LEER LAS VARIABLES DE AMBIENTE
+import io.github.cdimascio.dotenv.Dotenv;
+
 public class Main implements LongPollingSingleThreadUpdateConsumer {
 
-    private static final String TOKEN = System.getenv("TELEGRAM_TOKEN");
+    private static final Dotenv dotenv = Dotenv.load();
+    private static final String TOKEN = dotenv.get("TELEGRAM_TOKEN");
     private final TelegramClient client = new OkHttpTelegramClient(TOKEN);
 
     public static void main(String[] args) throws Exception {
