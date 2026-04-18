@@ -21,7 +21,7 @@ import okhttp3.Response;
 
 public class Main implements LongPollingSingleThreadUpdateConsumer {
 
-    private static final Dotenv dotenv = Dotenv.load();
+    private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
     private static final String TOKEN = dotenv.get("TELEGRAM_TOKEN");
     private static final String WEATHER_API_KEY = dotenv.get("OPENWEATHER_API_KEY");
     private final TelegramClient client = new OkHttpTelegramClient(TOKEN);
