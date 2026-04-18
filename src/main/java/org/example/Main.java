@@ -9,7 +9,7 @@ import org.telegram.telegrambots.meta.generics.TelegramClient;
 
 public class Main implements LongPollingSingleThreadUpdateConsumer {
 
-    private static final String TOKEN = "8767300338:AAFav8NkElE_gpcrf_eih6Z2jIbGGSM-ugs";
+    private static final String TOKEN = System.getenv("TELEGRAM_TOKEN");
     private final TelegramClient client = new OkHttpTelegramClient(TOKEN);
 
     public static void main(String[] args) throws Exception {
@@ -29,7 +29,7 @@ public class Main implements LongPollingSingleThreadUpdateConsumer {
                 try {
                     client.execute(SendMessage.builder()
                             .chatId(chatId)
-                            .text("¡Hola! Soy tu bot en Java 🤖☕")
+                            .text("¡Hola! Soy tu bot en Java :)")
                             .build());
                 } catch (Exception e) {
                     e.printStackTrace();
