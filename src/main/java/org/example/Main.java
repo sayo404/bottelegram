@@ -24,6 +24,7 @@ public class Main implements LongPollingSingleThreadUpdateConsumer {
     private static final Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
     private static final String TOKEN = dotenv.get("TELEGRAM_TOKEN");
     private static final String WEATHER_API_KEY = dotenv.get("OPENWEATHER_API_KEY");
+    private static final String EXCHANGE_API_KEY = dotenv.get("EXCHANGE_API_KEY");
     private final TelegramClient client = new OkHttpTelegramClient(TOKEN);
     private final OkHttpClient httpClient = new OkHttpClient();
 
@@ -46,8 +47,10 @@ public class Main implements LongPollingSingleThreadUpdateConsumer {
             } else if (texto.startsWith("/clima ")) {
                 String ciudad = texto.substring(7);
                 respuesta = obtenerClima(ciudad);
+            } else if (texto.equals("/dolar")) {
+                respuesta = obtenerTipoCambio();
             } else {
-                respuesta = "No entiendo ese comando. Usa /clima <ciudad>";
+                respuesta = "No entiendo ese comando.\n/clima <ciudad> — Consulta el clima\n/dolar — Tipo de cambio";
             }
 
             try {
@@ -58,6 +61,34 @@ public class Main implements LongPollingSingleThreadUpdateConsumer {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private String obtenerTipoCambio() {
+        String url = "https://openexchangerates.org/api/latest.json?app_id="
+                + EXCHANGE_API_KEY + "&symbols=MXN,EUR,CAD";
+
+        Request request = new Request.Builder().url(url).build();
+
+        try (Response response = httpClient.newCall(request).execute()) {
+            if (!response.isSuccessful() || response.body() == null) {
+                return "Error al consultar el tipo de cambio.";
+            }
+
+            JsonObject json = JsonParser.parseString(response.body().string()).getAsJsonObject();
+            JsonObject rates = json.getAsJsonObject("rates");
+
+            double mxn = rates.get("MXN").getAsDouble();
+            double eur = rates.get("EUR").getAsDouble();
+            double cad = rates.get("CAD").getAsDouble();
+
+            return String.format(
+                    "💱 Tipo de cambio (base USD)\n\n🇲🇽 MXN: %.4f\n🇪🇺 EUR: %.4f\n🇨🇦 CAD: %.4f",
+                    mxn, eur, cad
+            );
+
+        } catch (Exception e) {
+            return "Error al consultar el tipo de cambio.";
         }
     }
 
