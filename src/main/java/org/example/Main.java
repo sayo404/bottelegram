@@ -48,7 +48,6 @@ public class Main implements LongPollingSingleThreadUpdateConsumer {
                 respuesta = obtenerClima(ciudad);
             } else {
                 respuesta = "No entiendo ese comando. Usa /clima <ciudad>";
-                respuesta = "No entiendo ese comando. Usa /clima <ciudad>";
             }
 
             try {
