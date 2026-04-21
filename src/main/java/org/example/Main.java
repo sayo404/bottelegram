@@ -12,9 +12,10 @@ public class Main {
         String token = dotenv.get("TELEGRAM_TOKEN");
         String weatherApiKey = dotenv.get("OPENWEATHER_API_KEY");
         String exchangeApiKey = dotenv.get("EXCHANGE_API_KEY");
+        String newsApiKey = dotenv.get("NEWS_API_KEY");
 
         TelegramBotsLongPollingApplication app = new TelegramBotsLongPollingApplication();
-        app.registerBot(token, new TelegramBot(token, weatherApiKey, exchangeApiKey));
+        app.registerBot(token, new TelegramBot(token, weatherApiKey, exchangeApiKey, newsApiKey));
         System.out.println("¡Bot iniciado!");
         Thread.currentThread().join();
     }
